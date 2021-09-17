@@ -16,10 +16,10 @@ FROM teachers
 JOIN assistance_requests ON teacher_id = teachers.id
 JOIN students ON student_id = students.id
 JOIN cohorts ON cohort_id = cohorts.id
-WHERE cohorts.name = '${cohort_name}'
+WHERE cohorts.name = $1
 ORDER BY teacher;`;
-
-pool.query(query).then(res => {
+let values = [cohort_name];
+pool.query(query,values).then(res => {
   res.rows.forEach(teacher => {
     console.log(`${teacher.cohort}: ${teacher.teacher}`);
    });

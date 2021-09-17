@@ -12,14 +12,15 @@ let args = process.argv.slice(2);
 let cohort_name = args[0];
 let LIMIT = args[1];
 
-pool.query(`
-SELECT students.id as id, students.name as name, cohorts.name as cohort
+let queryStatement = `SELECT students.id as id, students.name as name, cohorts.name as cohort
 FROM students
 JOIN cohorts
 ON cohort_id = cohorts.id
-WHERE cohorts.name = '${cohort_name}'
-LIMIT ${LIMIT};
-`)
+WHERE cohorts.name = $1
+LIMIT $2;`;
+
+let values = [cohort_name, LIMIT];
+pool.query(queryStatement, values)
 .then(res => {
   res.rows.forEach(user => {
     console.log(`${user.name} has an id of ${user.student_id} and was in the ${user.cohort} cohort`);
